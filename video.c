@@ -1,4 +1,3 @@
-
 #include <string.h>
 #include "config/video.h"
 
@@ -7,9 +6,10 @@
 //   h: height of the image
 //   durationMovie: duration in seconds of the movie (colored image)
 //   durationCredits: duration in seconds of the credits (black/white image)
+//   fps: Frames per second of the video
 //   unit: Unit of the output value. It could be 'bt' (bits), 'ko' (kilobits), 'mo' (megabits), 'go' (gigabits)
 // Return value:
-//   Colored video size (based on the unit passed as a parameter)
+//   Video size (based on the unit passed as a parameter)
 
 float video(int w, int h, int durationMovie, int durationCredits, int fps, char* unit) {
     // Calculate frame sizes
@@ -23,20 +23,16 @@ float video(int w, int h, int durationMovie, int durationCredits, int fps, char*
     // Calculate total size in bits
     long long totalSizeBits = (totalFramesMovie * frameSizeColorBits) + (totalFramesCredits * frameSizeBWBits);
 
-    // Convert total size to bytes
-    float totalSizeBytes = totalSizeBits / 8.0;
-
     // Convert based on the unit
     if (strcmp(unit, "bt") == 0) {
-        return totalSizeBits; // Return size in bits
+        return (float)totalSizeBits; // Return size in bits
     } else if (strcmp(unit, "ko") == 0) {
-        return totalSizeBytes / 1024.0; // Convert bytes to kilobytes
+        return (float)totalSizeBits / 8192.0; // Convert bits to kilobytes (1 kilobyte = 8192 bits)
     } else if (strcmp(unit, "mo") == 0) {
-        return totalSizeBytes / (1024.0 * 1024.0); // Convert bytes to megabytes
+        return (float)totalSizeBits / (8192.0 * 1024.0); // Convert bits to megabytes
     } else if (strcmp(unit, "go") == 0) {
-        return totalSizeBytes / (1024.0 * 1024.0 * 1024.0); // Convert bytes to gigabytes
+        return (float)totalSizeBits / (8192.0 * 1024.0 * 1024.0); // Convert bits to gigabytes
     } else {
         return 0; // Invalid unit
     }
 }
-
